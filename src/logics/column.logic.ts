@@ -91,7 +91,7 @@ export default function computeColumnDesign(column: ColumnType): ColumnResult {
    */
   // NOTE:
   // 1.철근비는 8% 이하로 제한됨으로 복부압괴는 고려하지 않음.
-  // 2.콘크리트의 전단강도 계산시 좀더 보수적으로 계산하기위해 보에서의 전단강도 로직을 그대로 사용. 즉, 축력의 효과를 고려하지 않음.
+  // 2.콘크리트의 전단강도 계산시 축력의 효과는 나중에 계산 결과 화면에서 고려. -> 축력 효과는 요구 강도에 따라 변화하므로 결과 화면에서 동적으로 계산해준다.
 
   const stirrup_area = SteelArea[column[Column.stirrup_d] as keyof typeof SteelArea] * column[Column.stirrup_n]; // 전단 철근 단면적
   const stirrup_h_prime = Math.max(...column[Column.steel_data].map((d) => d[SteelData.y])); // 전단 철근 유효 깊이 (배근된 주철근중 높이 갚이 가장 큰것으로 설정)

@@ -9,7 +9,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import {
   Heading,
   NumberDecrementStepper,
@@ -23,11 +23,25 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 /** P-M 그래프 */
-const PMGraphGraphic = ({ data, pMax }: { data: { p: number; m: number; pi: number }[]; pMax: number }) => {
-  // 요구강도 테스트를 위한 force, moment 상태선언
-  const [demandedForce, setDemandedForce] = useState<number>();
-  const [demandedMoment, setDemandedMoment] = useState<number>();
-
+const PMGraphGraphic = ({
+  data,
+  pMax,
+  testLoad,
+  setTestLoad,
+}: {
+  data: { p: number; m: number; pi: number }[];
+  pMax: number;
+  testLoad: {
+    force?: number;
+    moment?: number;
+  };
+  setTestLoad: Dispatch<
+    SetStateAction<{
+      force?: number;
+      moment?: number;
+    }>
+  >;
+}) => {
   const pmData = data.map((d) => ({ m: d.m / 1000000, p: d.p / 1000, pi: d.pi }));
   const datasets = [
     // Pmax 적용된 P-M 그래프
@@ -64,12 +78,12 @@ const PMGraphGraphic = ({ data, pMax }: { data: { p: number; m: number; pi: numb
       pointRadius: 1,
     },
   ];
-  if (demandedForce !== undefined && demandedMoment !== undefined) {
+  if (testLoad.force !== undefined && testLoad.moment !== undefined) {
     datasets.unshift(
       // 요구강도 그래프
       {
         label: "테스트 강도",
-        data: [{ x: demandedMoment, y: demandedForce }],
+        data: [{ x: testLoad.moment, y: testLoad.force }],
         backgroundColor: "rgba(255, 0, 0, 1)",
         borderWidth: 0,
         pointRadius: 5,
@@ -103,8 +117,8 @@ const PMGraphGraphic = ({ data, pMax }: { data: { p: number; m: number; pi: numb
           <NumberInput
             step={1}
             name="force"
-            value={demandedForce}
-            onChange={(valueString) => setDemandedForce(Number(valueString))}
+            value={testLoad.force}
+            onChange={(valueString) => setTestLoad((e) => ({ ...e, force: Number(valueString) }))}
           >
             <NumberInputField />
             <NumberInputStepper>
@@ -120,9 +134,9 @@ const PMGraphGraphic = ({ data, pMax }: { data: { p: number; m: number; pi: numb
           <NumberInput
             step={1}
             name="moment"
-            value={demandedMoment}
+            value={testLoad.moment}
             min={0}
-            onChange={(valueString) => setDemandedMoment(Number(valueString))}
+            onChange={(valueString) => setTestLoad((e) => ({ ...e, moment: Number(valueString) }))}
           >
             <NumberInputField />
             <NumberInputStepper>
