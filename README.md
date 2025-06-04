@@ -26,7 +26,13 @@
 
   > 메인 페이지: src > pages > index.tsx
 
-  > 빔 또는 슬라브 설계 페이지: src > pages > beam > index.tsx
+  > 보 설계 페이지: src > pages > beam > index.tsx
+
+  > 리버스 보 설계 페이지: src > pages > beam-reversed > index.tsx
+
+  > 기둥 설계 페이지: src > pages > column > index.tsx
+
+  > 리버스 기둥 설계 페이지: src > pages > column-reversed > index.tsx
 
 - graphics > UI중에서도 특히 이해를 돕기위해 그림, 도형 등 시각적 자료를 그리는 폴더
 
