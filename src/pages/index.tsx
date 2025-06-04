@@ -24,8 +24,8 @@ export default function Home() {
 
       {/* FOOTER */}
       <footer className="flex justify-end">
-        <Link href={"https://github.com/ghkvuddl/structual-concrete"}>
-          🔗: https://github.com/ghkvuddl/structual-concrete
+        <Link href={"https://github.com/ghkvuddl/reinforced-concrete"}>
+          🔗: https://github.com/ghkvuddl/reinforced-concrete
         </Link>
       </footer>
     </main>
