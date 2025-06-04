@@ -10,7 +10,7 @@
 
 아래 링크를 통해 배포사이트를 확인할 수 있습니다.
 
-[http://sturctural-concrete.s3-website.ap-northeast-2.amazonaws.com/](http://sturctural-concrete.s3-website.ap-northeast-2.amazonaws.com/)
+[http://reinforced-concrete.s3-website.ap-northeast-2.amazonaws.com/](http://reinforced-concrete.s3-website.ap-northeast-2.amazonaws.com/)
 
 ## 🗂️ Project Structure
 
