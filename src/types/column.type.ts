@@ -58,13 +58,13 @@ export const ColumnDisplayName: { [key in Column]: string } = {
   [Column.elasticity_steel]: "Es(MPa)",
 
   [Column.fy]: "Fy(MPa)",
-  [Column.steel_d]: "steel_d (mm)",
-  [Column.steel_data]: "steel_data",
+  [Column.steel_d]: "Steel Diameter (mm)",
+  [Column.steel_data]: "Steel Data",
 
   [Column.fy_v]: "Fy_v (MPa)",
-  [Column.stirrup_n]: "stirrup_n (개)",
-  [Column.stirrup_d]: "stirrup_d (mm)",
-  [Column.stirrup_s]: "stirrup_s (mm)",
+  [Column.stirrup_n]: "Stirrup Amount (개)",
+  [Column.stirrup_d]: "Stirrup Diameter (mm)",
+  [Column.stirrup_s]: "Stirrup Spacing (mm)",
 };
 
 /** 계산 후 반환할 데이터 */
