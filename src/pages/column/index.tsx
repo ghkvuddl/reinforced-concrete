@@ -43,11 +43,12 @@ import { Column, ColumnDisplayName, ColumnToolTip, ColumnType, SteelData, SteelD
 import { useColumnState } from "@/hooks/useColumnState";
 import PMGraphGraphic from "@/graphics/pmGraph.graphic";
 import ColumnDiagramGraphic from "@/graphics/columnDiagram.graphic";
+import React from "react";
 
 // ColumnPage UI
 const ColumnPage = () => {
   const router = useRouter();
-  const { pageStep, setPageStep, formik, result } = useColumnState();
+  const { pageStep, setPageStep, formik, result, axialForceEffect, testLoad, setTestLoad } = useColumnState();
 
   switch (pageStep) {
     // 데이터 입력 UI
@@ -228,58 +229,24 @@ const ColumnPage = () => {
           <Heading size="md" my={4}>
             ✅ P-M Graph
           </Heading>
-          <PMGraphGraphic data={result.PMData} pMax={result.Pmax} />
+          <PMGraphGraphic data={result.PMData} pMax={result.Pmax} testLoad={testLoad} setTestLoad={setTestLoad} />
 
           {/* PM 결과 표 */}
-          <Accordion allowToggle>
-            <AccordionItem>
-              <AccordionButton px={0} py={4}>
-                <Heading size="md">✅ Table of P,M</Heading>
-                <AccordionIcon boxSize={8} />
-              </AccordionButton>
-              <AccordionPanel pb={4}>
-                <TableContainer>
-                  <Table variant="striped" colorScheme="blue">
-                    <TableCaption>c값에 따른 P, M 표</TableCaption>
-                    <Thead>
-                      <Tr>
-                        <Th>c</Th>
-                        <Th isNumeric>P (kN)</Th>
-                        <Th isNumeric>M (kN*m)</Th>
-                        <Th>𝜙</Th>
-                        <Th isNumeric>𝜙P (kN)</Th>
-                        <Th isNumeric>𝜙M (kN*m)</Th>
-                      </Tr>
-                    </Thead>
-                    <Tbody>
-                      {result.PMData.map((data, index) => {
-                        const P = data.p / 1000;
-                        const M = data.m / 1000000;
-                        return (
-                          <Tr key={index}>
-                            <Td>{index + 1}</Td>
-                            <Td isNumeric>{P.toFixed(4)}</Td>
-                            <Td isNumeric>{M.toFixed(4)}</Td>
-                            <Td>{data.pi.toFixed(2)}</Td>
-                            <Td isNumeric>{(P * data.pi).toFixed(4)}</Td>
-                            <Td isNumeric>{(M * data.pi).toFixed(4)}</Td>
-                          </Tr>
-                        );
-                      })}
-                    </Tbody>
-                  </Table>
-                </TableContainer>
-              </AccordionPanel>
-            </AccordionItem>
-          </Accordion>
+          <PMTableComponent pmData={result.PMData} />
 
           {/* 전단 강도 결과 */}
           <Heading my={4} size="md">
             ✅ Result of V
+            <Text fontSize="16px">
+              * 요구 강도 테스트에서 하중 입력시 자동으로 축력을 고려한 전단강도가 새로 계산됩니다.
+            </Text>
           </Heading>
-          <ResultComponent title="Shear Force (kN)" value={result.shear_force / 1000} />
+          <ResultComponent title="Shear Force (kN)" value={result.shear_force / 1000 + axialForceEffect} />
           <ResultComponent title="ϕ (Fixed)" value={`${result.pi_shear_force}`} />
-          <ResultComponent title="ϕVn (kN)" value={(result.shear_force * result.pi_shear_force) / 1000} />
+          <ResultComponent
+            title="ϕVn (kN)"
+            value={(result.shear_force / 1000 + axialForceEffect) * result.pi_shear_force}
+          />
 
           <HStack w="full">
             <Button className="flex-grow" onClick={() => setPageStep(PAGE_STEP.INPUT)} colorScheme="blue">
@@ -295,6 +262,53 @@ const ColumnPage = () => {
 };
 
 export default ColumnPage;
+
+/** PM Table */
+const PMTableComponent = React.memo(({ pmData }: { pmData: { m: number; p: number; pi: number }[] }) => {
+  return (
+    <Accordion allowToggle>
+      <AccordionItem>
+        <AccordionButton px={0} py={4}>
+          <Heading size="md">✅ Table of P,M</Heading>
+          <AccordionIcon boxSize={8} />
+        </AccordionButton>
+        <AccordionPanel pb={4}>
+          <TableContainer>
+            <Table variant="striped" colorScheme="blue">
+              <TableCaption>c값에 따른 P, M 표</TableCaption>
+              <Thead>
+                <Tr>
+                  <Th>c</Th>
+                  <Th isNumeric>P (kN)</Th>
+                  <Th isNumeric>M (kN*m)</Th>
+                  <Th>𝜙</Th>
+                  <Th isNumeric>𝜙P (kN)</Th>
+                  <Th isNumeric>𝜙M (kN*m)</Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                {pmData.map((data, index) => {
+                  const P = data.p / 1000;
+                  const M = data.m / 1000000;
+                  return (
+                    <Tr key={index}>
+                      <Td>{index + 1}</Td>
+                      <Td isNumeric>{P.toFixed(4)}</Td>
+                      <Td isNumeric>{M.toFixed(4)}</Td>
+                      <Td>{data.pi.toFixed(2)}</Td>
+                      <Td isNumeric>{(P * data.pi).toFixed(4)}</Td>
+                      <Td isNumeric>{(M * data.pi).toFixed(4)}</Td>
+                    </Tr>
+                  );
+                })}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
+  );
+});
 
 /** 데이터 입력 컴포넌트 */
 const ColumnInputComponent = ({

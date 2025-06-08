@@ -10,7 +10,7 @@
 
 아래 링크를 통해 배포사이트를 확인할 수 있습니다.
 
-[http://sturctural-concrete.s3-website.ap-northeast-2.amazonaws.com/](http://sturctural-concrete.s3-website.ap-northeast-2.amazonaws.com/)
+[http://reinforced-concrete.s3-website.ap-northeast-2.amazonaws.com/](http://reinforced-concrete.s3-website.ap-northeast-2.amazonaws.com/)
 
 ## 🗂️ Project Structure
 
@@ -20,13 +20,21 @@
 
   > 보 (슬라브) 설계: beam.logic.ts
 
+  > 보 역설계: beam-reversed.logic.ts
+
   > 기둥 (벽체) 설계: column.logic.ts
 
 - pages > 라우팅 및 UI 그리는 폴더
 
   > 메인 페이지: src > pages > index.tsx
 
-  > 빔 또는 슬라브 설계 페이지: src > pages > beam > index.tsx
+  > 보 설계 페이지: src > pages > beam > index.tsx
+
+  > 리버스 보 설계 페이지: src > pages > beam-reversed > index.tsx
+
+  > 기둥 설계 페이지: src > pages > column > index.tsx
+
+  > 리버스 기둥 설계 페이지: src > pages > column-reversed > index.tsx
 
 - graphics > UI중에서도 특히 이해를 돕기위해 그림, 도형 등 시각적 자료를 그리는 폴더
 

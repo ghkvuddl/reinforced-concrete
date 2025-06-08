@@ -1,8 +1,8 @@
 import computeColumnDesign from "@/logics/column.logic";
-import { Column, ColumnResult, ColumnType } from "@/types/column.type";
+import { Column, ColumnResult, ColumnType, SteelData } from "@/types/column.type";
 import { PAGE_STEP } from "@/types/step.type";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import * as yup from "yup";
 
 // ColumnPage 상태관리
@@ -52,5 +52,30 @@ export function useColumnState() {
     }),
   });
 
-  return { pageStep, setPageStep, formik, result };
+  // 요구강도 테스트를 위한 force, moment 상태선언
+  const [testLoad, setTestLoad] = useState<{ force?: number; moment?: number }>({});
+
+  // 전단강도에서의 축력효과 값 -> 축력이 가해지면 버틸 수 있는 전단력이 더 커지게 되므로, 이를 고려해준다.
+  const axialForceEffect = useMemo(() => {
+    const _section_area = formik.values[Column.b] * formik.values[Column.h]; //  기둥 단면적
+    const _stirrup_h_prime = Math.max(...formik.values[Column.steel_data].map((d) => d[SteelData.y])); // 전단 철근 유효 깊이 (배근된 주철근중 높이 갚이 가장 큰것으로 설정)
+
+    return (
+      (1 / 6) *
+      ((testLoad.force ?? 0) / (14 * _section_area)) *
+      Math.sqrt(formik.values[Column.fc_prime]) *
+      formik.values[Column.b] *
+      _stirrup_h_prime
+    );
+  }, [testLoad.force]);
+
+  return {
+    pageStep,
+    setPageStep,
+    formik,
+    result,
+    testLoad,
+    setTestLoad,
+    axialForceEffect,
+  };
 }

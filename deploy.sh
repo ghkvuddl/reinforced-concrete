@@ -5,7 +5,8 @@ if [ -z "$answer"]; then
 fi
 
 if [ "$answer" = "y" ]; then
-	npm run build && aws s3 sync out s3://sturctural-concrete --delete --include "*" --profile snsshvdl9820
+	npm run build && aws s3 sync out s3://reinforced-concrete --delete --include "*" --profile snsshvdl9820
+	# npm run build && aws s3 sync out s3://sturctural-concrete --delete --include "*" --profile snsshvdl9820
 else
 	echo "output: export로 설정후 배포해주세요."
 fi
