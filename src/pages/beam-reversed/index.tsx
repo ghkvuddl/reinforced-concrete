@@ -1,6 +1,13 @@
 import { useBeamReversedState } from "@/hooks/useBeamReversedState";
 import { PAGE_STEP } from "@/types/step.type";
-import { Beam, BeamDisplayName } from "@/types/beam.type";
+import {
+  Beam,
+  BeamDisplayName,
+  BeamReversed,
+  BeamReversedDisplayName,
+  BeamReversedToolTip,
+  BeamReversedType,
+} from "@/types/beam.type";
 import {
   Button,
   Center,
@@ -19,10 +26,14 @@ import {
   Box,
   FormControl,
   FormLabel,
+  VStack,
 } from "@chakra-ui/react";
+import { FormikErrors } from "formik";
+import { useRouter } from "next/router";
 
 // BeamReversedPage UI
 const BeamReversedPage = () => {
+  const router = useRouter();
   const { pageStep, setPageStep, formik, result } = useBeamReversedState();
 
   switch (pageStep) {
@@ -32,189 +43,101 @@ const BeamReversedPage = () => {
         <form onSubmit={formik.handleSubmit} className="p-8">
           {/* 요구 강도 입력 */}
           <Heading size="md">✏️ 요구 강도</Heading>
-          <Wrap spacing="30px" my={6}>
-            <FormControl>
-              <FormLabel fontWeight="bold">요구 모멘트 강도 (kN*m)</FormLabel>
-              <Tooltip label="설계에 필요한 목표 모멘트 강도">
-                <NumberInput
-                  value={formik.values.requiredMoment}
-                  onChange={(valueString) => formik.setFieldValue("requiredMoment", Number(valueString))}
-                  step={50}
-                  min={1}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              </Tooltip>
-            </FormControl>
+          <VStack my={6} gap={4}>
+            <BeamReversedInputComponent
+              type={BeamReversed.requiredMoment}
+              value={formik.values.requiredMoment}
+              setValue={formik.setFieldValue}
+              step={50}
+            />
 
-            <FormControl>
-              <FormLabel fontWeight="bold">요구 전단 강도 (kN)</FormLabel>
-              <Tooltip label="설계에 필요한 목표 전단 강도">
-                <NumberInput
-                  value={formik.values.requiredShear}
-                  onChange={(valueString) => formik.setFieldValue("requiredShear", Number(valueString))}
-                  step={20}
-                  min={1}
-                >
-                  <NumberInputField />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper />
-                    <NumberDecrementStepper />
-                  </NumberInputStepper>
-                </NumberInput>
-              </Tooltip>
-            </FormControl>
-          </Wrap>
+            <BeamReversedInputComponent
+              type={BeamReversed.requiredShear}
+              value={formik.values.requiredShear}
+              setValue={formik.setFieldValue}
+              step={20}
+            />
+          </VStack>
           <Divider my={8} />
 
           {/* 단면 제약 조건 */}
           <Heading size="md">✏️ 단면 제약 조건</Heading>
-          <Wrap spacing="30px" my={6}>
-            <FormControl>
-              <FormLabel fontWeight="bold">최소 너비 (mm)</FormLabel>
-              <NumberInput
-                value={formik.values.minWidth}
-                onChange={(valueString) => formik.setFieldValue("minWidth", Number(valueString))}
-                min={200}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
+          <VStack my={6} gap={4}>
+            <BeamReversedInputComponent
+              type={BeamReversed.minWidth}
+              value={formik.values.minWidth}
+              setValue={formik.setFieldValue}
+              step={10}
+              min={200}
+            />
 
-            <FormControl>
-              <FormLabel fontWeight="bold">최대 너비 (mm)</FormLabel>
-              <NumberInput
-                value={formik.values.maxWidth}
-                onChange={(valueString) => formik.setFieldValue("maxWidth", Number(valueString))}
-                min={formik.values.minWidth}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
+            <BeamReversedInputComponent
+              type={BeamReversed.maxWidth}
+              value={formik.values.maxWidth}
+              setValue={formik.setFieldValue}
+              step={10}
+              min={formik.values.minWidth}
+            />
 
-            <FormControl>
-              <FormLabel fontWeight="bold">최소 높이 (mm)</FormLabel>
-              <NumberInput
-                value={formik.values.minHeight}
-                onChange={(valueString) => formik.setFieldValue("minHeight", Number(valueString))}
-                min={300}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
+            <BeamReversedInputComponent
+              type={BeamReversed.minHeight}
+              value={formik.values.minHeight}
+              setValue={formik.setFieldValue}
+              step={10}
+              min={300}
+            />
 
-            <FormControl>
-              <FormLabel fontWeight="bold">최대 높이 (mm)</FormLabel>
-              <NumberInput
-                value={formik.values.maxHeight}
-                onChange={(valueString) => formik.setFieldValue("maxHeight", Number(valueString))}
-                min={formik.values.minHeight}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-          </Wrap>
+            <BeamReversedInputComponent
+              type={BeamReversed.maxHeight}
+              value={formik.values.maxHeight}
+              setValue={formik.setFieldValue}
+              step={10}
+              min={formik.values.minHeight}
+            />
+          </VStack>
           <Divider my={8} />
 
           {/* 재료 속성 */}
           <Heading size="md">✏️ 재료 속성</Heading>
-          <Wrap spacing="30px" my={6}>
-            <FormControl>
-              <FormLabel fontWeight="bold">{BeamDisplayName[Beam.fc_prime]}</FormLabel>
-              <NumberInput
-                value={formik.values.fc_prime}
-                onChange={(valueString) => formik.setFieldValue("fc_prime", Number(valueString))}
-                min={21}
-                max={50}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
+          <VStack my={6} gap={4}>
+            <BeamReversedInputComponent
+              type={BeamReversed.fc_prime}
+              value={formik.values.fc_prime}
+              setValue={formik.setFieldValue}
+              step={1}
+              min={21}
+              max={50}
+            />
 
-            <FormControl>
-              <FormLabel fontWeight="bold">{BeamDisplayName[Beam.fy_t]}</FormLabel>
-              <NumberInput
-                value={formik.values.fy_t}
-                onChange={(valueString) => formik.setFieldValue("fy_t", Number(valueString))}
-                step={50}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
+            <BeamReversedInputComponent
+              type={BeamReversed.fy_t}
+              value={formik.values.fy_t}
+              setValue={formik.setFieldValue}
+              step={50}
+            />
 
-            <FormControl>
-              <FormLabel fontWeight="bold">{BeamDisplayName[Beam.fy_b]}</FormLabel>
-              <NumberInput
-                value={formik.values.fy_b}
-                onChange={(valueString) => formik.setFieldValue("fy_b", Number(valueString))}
-                step={50}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
+            <BeamReversedInputComponent
+              type={BeamReversed.fy_b}
+              value={formik.values.fy_b}
+              setValue={formik.setFieldValue}
+              step={50}
+            />
 
-            <FormControl>
-              <FormLabel fontWeight="bold">{BeamDisplayName[Beam.fy_v]}</FormLabel>
-              <NumberInput
-                value={formik.values.fy_v}
-                onChange={(valueString) => formik.setFieldValue("fy_v", Number(valueString))}
-                step={50}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
+            <BeamReversedInputComponent
+              type={BeamReversed.fy_v}
+              value={formik.values.fy_v}
+              setValue={formik.setFieldValue}
+              step={50}
+            />
 
-            <FormControl>
-              <FormLabel fontWeight="bold">{BeamDisplayName[Beam.elasticity_steel]}</FormLabel>
-              <NumberInput
-                value={formik.values.elasticity_steel}
-                onChange={(valueString) => formik.setFieldValue("elasticity_steel", Number(valueString))}
-                step={10000}
-              >
-                <NumberInputField />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-          </Wrap>
+            <BeamReversedInputComponent
+              type={BeamReversed.elasticity_steel}
+              value={formik.values.elasticity_steel}
+              setValue={formik.setFieldValue}
+              step={10000}
+              min={100000}
+            />
+          </VStack>
 
           {/* 계산 버튼 */}
           <Button isDisabled={!formik.isValid || formik.isSubmitting} mt={8} w="full" type="submit" colorScheme="blue">
@@ -237,7 +160,7 @@ const BeamReversedPage = () => {
 
       return (
         <div className="p-8">
-          {/* 계산 결과 - 요약 */}
+          {/* 계산 결과 */}
           <Heading size="lg" mb={6}>
             최적 단면 설계 결과
           </Heading>
@@ -283,7 +206,7 @@ const BeamReversedPage = () => {
               🔶 늑근(띠철근) 정보
             </Heading>
             <HStack spacing={8} flexWrap="wrap">
-              <ResultComponent title="철근 수" value={result.stirrup_n} />
+              <ResultComponent title="철근 수( 2 = 한바퀴 )" value={result.stirrup_n} />
               <ResultComponent title="직경 (mm)" value={result.stirrup_d} />
               <ResultComponent title="간격 (mm)" value={result.stirrup_s} />
               <ResultComponent title="유효 깊이 (mm)" value={result.stirrup_h_prime} />
@@ -311,10 +234,14 @@ const BeamReversedPage = () => {
             </HStack>
           </Box>
 
-          {/* 다시 계산하기 버튼 */}
-          <Button mt={8} w="full" onClick={() => setPageStep(PAGE_STEP.INPUT)} colorScheme="blue">
-            다시 계산하기
-          </Button>
+          <HStack w="full" mt={4}>
+            <Button className="flex-grow" onClick={() => setPageStep(PAGE_STEP.INPUT)} colorScheme="blue">
+              Back
+            </Button>
+            <Button className="flex-grow" onClick={() => router.push("/")} colorScheme="blue">
+              Home
+            </Button>
+          </HStack>
         </div>
       );
   }
@@ -322,13 +249,55 @@ const BeamReversedPage = () => {
 
 export default BeamReversedPage;
 
+/** 데이터 입력 컴포넌트 */
+const BeamReversedInputComponent = ({
+  type,
+  step,
+  value = 0,
+  setValue,
+  min = 1,
+  max = 9999999,
+}: {
+  type: BeamReversed;
+  step?: number;
+  value?: number;
+  setValue?: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean
+  ) => Promise<void> | Promise<FormikErrors<BeamReversedType>>;
+  min?: number;
+  max?: number;
+}) => {
+  return (
+    <Tooltip label={BeamReversedToolTip[type]}>
+      <FormControl>
+        <FormLabel fontWeight="bold">{BeamReversedDisplayName[type]}</FormLabel>
+        <NumberInput
+          value={value}
+          onChange={(valueString) => setValue && setValue(type, Number(valueString))}
+          step={step}
+          min={min}
+          max={max}
+        >
+          <NumberInputField />
+          <NumberInputStepper>
+            <NumberIncrementStepper />
+            <NumberDecrementStepper />
+          </NumberInputStepper>
+        </NumberInput>
+      </FormControl>
+    </Tooltip>
+  );
+};
+
 /** 결과 표시 컴포넌트 */
 const ResultComponent = ({ title, value, color }: { title: string; value: number | string; color?: string }) => {
   return (
     <HStack my={2}>
       <Text fontWeight="bold">{`${title}:`}</Text>
       <Text fontSize="lg" fontWeight="medium" color={color}>
-        {typeof value === "number" ? value.toFixed(4) : value}
+        {typeof value === "number" ? value.toFixed(2) : value}
       </Text>
     </HStack>
   );

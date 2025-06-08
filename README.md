@@ -20,6 +20,8 @@
 
   > 보 (슬라브) 설계: beam.logic.ts
 
+  > 보 역설계: beam-reversed.logic.ts
+
   > 기둥 (벽체) 설계: column.logic.ts
 
 - pages > 라우팅 및 UI 그리는 폴더

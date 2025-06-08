@@ -164,8 +164,8 @@ export interface BeamReversedType {
 
 /** 변수 ToolTip 텍스트  */
 export const BeamReversedToolTip: { [key in BeamReversed]: string } = {
-  [BeamReversed.requiredMoment]: "요구 모멘트 강도 (kN*m)",
-  [BeamReversed.requiredShear]: "요구 전단 강도 (kN)",
+  [BeamReversed.requiredMoment]: "설계에 필요한 목표 모멘트 강도 (kN*m)",
+  [BeamReversed.requiredShear]: "설계에 필요한 목표 전단 강도 (kN)",
 
   [BeamReversed.minWidth]: "최소 단면 너비 (mm)",
   [BeamReversed.maxWidth]: "최대 단면 너비 (mm)",
@@ -214,3 +214,20 @@ export interface BeamReversedResult {
   /** 실제 설계 전단 강도 (kN) */
   actualShear: number;
 }
+
+/** 변수 Display Name */
+export const BeamReversedDisplayName: { [key in BeamReversed]: string } = {
+  [BeamReversed.requiredMoment]: "Moment (kN*m)",
+  [BeamReversed.requiredShear]: "Shear (kN)",
+
+  [BeamReversed.minWidth]: "Minimum Width (mm)",
+  [BeamReversed.maxWidth]: "Maximum Width (mm)",
+  [BeamReversed.minHeight]: "Minimum Height (mm)",
+  [BeamReversed.maxHeight]: "Maximum Height (mm)",
+
+  [BeamReversed.fc_prime]: "Fc'(MPa)",
+  [BeamReversed.fy_t]: "Fy of Top Steel (MPa)",
+  [BeamReversed.fy_b]: "Fy of Bottom Steel (MPa)",
+  [BeamReversed.fy_v]: "Fy of Stirrup (MPa)",
+  [BeamReversed.elasticity_steel]: "Es (MPa)",
+};

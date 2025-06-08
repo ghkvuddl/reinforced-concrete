@@ -1,5 +1,5 @@
 import computeBeamReversed from "@/logics/beam-reversed.logic";
-import { BeamReversedResult, BeamReversedType } from "@/types/beam.type";
+import { BeamReversed, BeamReversedResult, BeamReversedType } from "@/types/beam.type";
 import { PAGE_STEP } from "@/types/step.type";
 import { useFormik } from "formik";
 import { useState } from "react";
@@ -15,19 +15,19 @@ export function useBeamReversedState() {
   // 입력 데이터 관리
   const formik = useFormik<BeamReversedType>({
     initialValues: {
-      requiredMoment: 500, // kN*m
-      requiredShear: 200, // kN
+      [BeamReversed.requiredMoment]: 500, // kN*m
+      [BeamReversed.requiredShear]: 200, // kN
 
-      minWidth: 250, // mm
-      maxWidth: 600, // mm
-      minHeight: 500, // mm
-      maxHeight: 1200, // mm
+      [BeamReversed.minWidth]: 250, // mm
+      [BeamReversed.maxWidth]: 600, // mm
+      [BeamReversed.minHeight]: 500, // mm
+      [BeamReversed.maxHeight]: 1200, // mm
 
-      fc_prime: 30, // MPa
-      fy_t: 600, // MPa
-      fy_b: 600, // MPa
-      fy_v: 400, // MPa
-      elasticity_steel: 200000, // MPa
+      [BeamReversed.fc_prime]: 30, // MPa
+      [BeamReversed.fy_t]: 600, // MPa
+      [BeamReversed.fy_b]: 600, // MPa
+      [BeamReversed.fy_v]: 400, // MPa
+      [BeamReversed.elasticity_steel]: 200000, // MPa
     },
     onSubmit: (values) => {
       // 상태를 PROCESSING으로 업데이트
