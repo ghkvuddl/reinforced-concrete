@@ -1,13 +1,6 @@
 import { useBeamReversedState } from "@/hooks/useBeamReversedState";
 import { PAGE_STEP } from "@/types/step.type";
-import {
-  Beam,
-  BeamDisplayName,
-  BeamReversed,
-  BeamReversedDisplayName,
-  BeamReversedToolTip,
-  BeamReversedType,
-} from "@/types/beam.type";
+import { BeamReversed, BeamReversedDisplayName, BeamReversedToolTip, BeamReversedType } from "@/types/beam.type";
 import {
   Button,
   Center,
@@ -22,7 +15,6 @@ import {
   Spinner,
   Text,
   Tooltip,
-  Wrap,
   Box,
   FormControl,
   FormLabel,
@@ -140,7 +132,7 @@ const BeamReversedPage = () => {
           </VStack>
 
           {/* 계산 버튼 */}
-          <Button isDisabled={!formik.isValid || formik.isSubmitting} mt={8} w="full" type="submit" colorScheme="blue">
+          <Button isDisabled={!formik.isValid} mt={8} w="full" type="submit" colorScheme="blue">
             Show Result
           </Button>
         </form>
